@@ -10,7 +10,7 @@ import javax.swing.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-
+//comment
 
 //klasa ³aczaca z baza danych  i nastepnie inicjalizujaca wywolanie duzej ramki GUI
 //polaczenie z baza jest zamykane zaraz po jego utworzeniu
