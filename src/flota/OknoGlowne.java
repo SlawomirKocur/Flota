@@ -689,6 +689,7 @@ public class OknoGlowne {
                                                                 panelZamownienie.add(lblWartoscZamowienia);
                                                                 
                                                                 JButton btnPodsumowanie = new JButton("Podsumowanie");
+                                                                btnPodsumowanie.setBackground(Color.LIGHT_GRAY);
                                                                 btnPodsumowanie.addActionListener(new ActionListener() {
                                                                 	public void actionPerformed(ActionEvent e) {
                                                                 		
@@ -887,6 +888,7 @@ public class OknoGlowne {
                                                                     comboBoxPortWyladunkowy.setBackground(Color.WHITE);
                                                                     
                                                                     JButton btnAnalizuj = new JButton("Analizuj zamowienie");
+                                                                    btnAnalizuj.setBackground(Color.LIGHT_GRAY);
                                                                     btnAnalizuj.addActionListener(new ActionListener() {
                                                                     	public void actionPerformed(ActionEvent e) {
                                                                     		
