@@ -30,7 +30,7 @@ import net.proteanit.sql.DbUtils;
 
 public class OknoGlowne {
 
-    
+ 
 	
 	
     JTextField textIlosc;
@@ -76,6 +76,12 @@ public class OknoGlowne {
     Double wartoscZam;
     Date dataZaladunku, dataWyladunku;
     JLabel lblWartoscZamowienia;
+    
+    double lat1;
+	double lon1;
+	double lat2;
+	double lon2;
+    
     
     /**
      * @wbp.parser.entryPoint
@@ -678,6 +684,7 @@ public class OknoGlowne {
                                                                 panelZamownienie.add(lblZamowienieDataWy);                                                         
                                                                 
                                                                 lblWartoscZamowienia = new JLabel("Wartos zamowienia");
+                                                                lblWartoscZamowienia.setFont(new Font("Tahoma", Font.PLAIN, 11));
                                                                 lblWartoscZamowienia.setBounds(10, 265, 456, 71);
                                                                 panelZamownienie.add(lblWartoscZamowienia);
                                                                 
@@ -745,12 +752,113 @@ public class OknoGlowne {
                                                                        		
                                                                			}
                                                                			
-                                                               			lblWartoscZamowienia.setText("Wartoœæ zamówienia wynosi: " +wartosZamowieniString+ " USD");
+                                                               		
+                                                               			
+                                                               			Connection connDyst = null;
+                                                               			
+                                                             		   try {
+                                                                            Class.forName("org.sqlite.JDBC");
+                                                                        } catch (ClassNotFoundException e4) {
+                                                                            e4.printStackTrace();
+                                                                        }
+                                                             		
+                                                             		   
+                                                             		   try {
+
+                                                             			//pobiera szerokosc geograficzna z bazydanych
+                                                             			//nastepnie przypisuje do zmiennej 
+                                                             			//conn = DriverManager.getConnection("jdbc:sqlite:C:\\JAVA\\Moje bazy danych\\Flota.db");
+                                                             			  connDyst = DriverManager.getConnection("jdbc:sqlite:Flota.db");
+                                                             			
+                                                             			Statement stat = connDyst.createStatement();
+                                                                    		String pobierzSzerokoscPortZaladunkowy = ("Select SZEROKOSC_GEOGRAFICZNA FROM PORT WHERE NAZWA_PORTU = '" + wybranyPort+"'");
+                                                                    		ResultSet rsszer = stat.executeQuery(pobierzSzerokoscPortZaladunkowy);
+                                                                    		while (rsszer.next()) {
+                                                                    			lat1 = rsszer.getDouble(1);
+                                                                    		}
+                                                                    		
+                                                                    		
+                                                                    
+                                                                    		
+                                                                    		
+                                                                    		//pobiera dlugosc geograficzna z bazy danycg
+                                                                    		//nastepnie przypisuje do zmiennej
+                                                                    		Statement stat2 = connDyst.createStatement();
+                                                                    		String pobierzDlugoscPortZaladunkowy = ("Select DLUGOSC_GEOGRAFICZNA FROM PORT WHERE NAZWA_PORTU = '" + wybranyPort+"'");
+                                                                    		ResultSet rsdl = stat.executeQuery(pobierzDlugoscPortZaladunkowy);
+                                                                    		while (rsdl.next()) {
+                                                                    			lon1 = rsdl.getDouble(1);
+                                                                    		}
+                                                                    		
+                                                                    		
+                                                                    		
+                                                                 	
+                                                                    		
+                                                                    	//pobiera szerokosc geograficzna z bazydanych
+                                                             			//nastepnie przypisuje do zmiennej 
+                                                                    		Statement stat3 = connDyst.createStatement();
+                                                                    		String pobierzSzerokoscPortWyladunkowy = ("Select SZEROKOSC_GEOGRAFICZNA FROM PORT WHERE NAZWA_PORTU = '" + wybranyPortWyladunkowy+ "'");
+                                                                    		ResultSet rsszer2 = stat.executeQuery(pobierzSzerokoscPortWyladunkowy);
+                                                                    		while (rsszer2.next()) {
+                                                                    			lat2 = rsszer2.getDouble(1);
+                                                                    		}
+                                                                    		
+                                                                    		
+                                                                    		
+                                                                    	//pobiera dlugosc geograficzna z bazy danycg
+                                                                    		//nastepnie przypisuje do zmiennej
+                                                                    		Statement stat4 = connDyst.createStatement();
+                                                                    		String pobierzDlugoscPortWyladunkowy = ("Select DLUGOSC_GEOGRAFICZNA FROM PORT WHERE NAZWA_PORTU = '" + wybranyPortWyladunkowy+ "'");
+                                                                    		ResultSet rsdl2 = stat.executeQuery(pobierzDlugoscPortWyladunkowy);
+                                                                    		while (rsdl2.next()) {
+                                                                    			lon2 = rsdl2.getDouble(1);
+                                                                    		}
+                                                                    		
+                                                                    		
+                                                                    		
+                                                                    		//zamyka polaczenie z baza danych
+                                                                    		connDyst.close();
+                                                                    		
+                                                                    		
+                                                             		   
+                                                             		   } catch (Exception e4) {
+                                                                    		JOptionPane.showMessageDialog(null, "Problem with connection of database");
+                                                             		   }
+                                                             	
+                                                               			
+                                                             		
+                                                             			
+                                                             				double theta = lon1 - lon2;
+                                                             				double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
+                                                             				dist = Math.acos(dist);
+                                                             				dist = Math.toDegrees(dist);
+                                                             				
+                                                             					dist = dist * 0.8684;
+                                                             			
+                                                               			
+                                                               			
+                                                               			
+                                                               			
+                                                               			
+                                                               			
+                                                               			
+                                                               			
+                                                               			
+                                                               			
+                                                               			
+                                                               			
+                                                               			
+                                                               			
+                                                               			
+                                                               			
+                                                               			
+                                                               			
+                                                               			lblWartoscZamowienia.setText("Wartoœæ zamówienia wynosi: " +wartosZamowieniString+ " USD"+ "\n Dystans do przep³yniêcia: " + dist  );
                                                                 		
                                                                 		
                                                                 		
-                                                                		
-                                                                	}
+                                                                	}	
+                                                                	
                                                                 });
                                                                 btnPodsumowanie.setBounds(10, 341, 132, 53);
                                                                 panelZamownienie.add(btnPodsumowanie);
@@ -779,6 +887,62 @@ public class OknoGlowne {
                                                                     comboBoxPortWyladunkowy.setBackground(Color.WHITE);
                                                                     
                                                                     JButton btnAnalizuj = new JButton("Analizuj zamowienie");
+                                                                    btnAnalizuj.addActionListener(new ActionListener() {
+                                                                    	public void actionPerformed(ActionEvent e) {
+                                                                    		
+                                                                    	/*	
+                                                                    		wybranyLadunekWBTN = (String) comboBoxLadunek.getSelectedItem();
+                                                                    		wybranyPort = (String) comboBoxPort.getSelectedItem();
+                                                                    		wybranyPortWyladunkowy = (String) comboBoxPortWyladunkowy.getSelectedItem();
+                                                                    		String iloscString = textIlosc.getText();
+                                                                    		iloscDouble = Double.parseDouble(iloscString);
+                                                                    		ilosc = Double.parseDouble(textIlosc.getText());
+                                                                    		dataZaladunku = dateChooserZaladunek.getDate();
+                                                                    		dataWyladunku = dateChooserWyladunek.getDate();
+                                                                    		
+                                                                    		
+                                                                    		
+                                                                    		Connection connAnaliza = null;
+                                                                    		
+                                                                    		try {
+                                                                    		
+
+                                                                    			
+                                                                    			connAnaliza = DriverManager.getConnection("jdbc:sqlite:Flota.db");
+                                                                    			
+                                                                    			
+                                                                    			
+                                                                    			String query = "Select* From STATEK";
+                                                                    			
+                                                                    			
+                                                                    			
+                                                                    			
+                                                                    			PreparedStatement pst = connAnaliza.prepareStatement(query);
+                                                                    			ResultSet rs = pst.executeQuery();
+                                                                    			table.setModel(DbUtils.resultSetToTableModel(rs));
+                                                                    			
+                                                                    			
+                                                                    			
+                                                                    		
+                                                                    		}catch (Exception ex) {
+                                                                    			JOptionPane.showMessageDialog(null, "B³¹d po³¹czenia z baz¹");
+                                                                    			
+                                                                    		}
+                                                                    		
+                                                                    		
+                                                                    		
+                                                                    		
+                                                                    		
+                                                                    		
+                                                                    		
+                                                                    		
+                                                                    		
+                                                                    		
+                                                                    		
+                                                                    		*/
+                                                                    		
+                                                                    	}
+                                                                    });
                                                                     btnAnalizuj.setBounds(334, 341, 132, 53);
                                                                     panelZamownienie.add(btnAnalizuj);
                                                                     

@@ -27,9 +27,9 @@ import javax.swing.JOptionPane;
  * 
  * 
  */
-public class LiczyDystans extends Zamowienie {
+public class LiczyDystans {
 
-	//OknoGlowne okno = new OknoGlowne();
+	OknoGlowne okno = new OknoGlowne();
 	
 	double lat1;
 	double lon1;
@@ -40,8 +40,9 @@ public class LiczyDystans extends Zamowienie {
 	//przypisuje wartosc wybrane przez uzytkownika
 	
 	
-	String portZaladunkowy = okno.wybranyPort;
-	String portWyladunkowy = okno.wybranyPortWyladunkowy;
+	String portZaladunkowy = okno.wybranyPort = (String) okno.comboBoxPort.getSelectedItem();
+	String portWyladunkowy = okno.wybranyPortWyladunkowy = (String) okno.comboBoxPortWyladunkowy.getSelectedItem();
+	
 	
 	
 	
@@ -111,7 +112,7 @@ public class LiczyDystans extends Zamowienie {
 	
 	//oblicza dystans pomiedzy wybranymi "portami"
 	//na podstawie pobrany z bazy danych polozen  geograficznych
-	public static double distance(double lat1, double lon1, double lat2, double lon2, String unit) {
+	public static double distance(double lat1, double lon1, double lat2, double lon2) {
 		if ((lat1 == lat2) && (lon1 == lon2)) {
 			return 0;
 		}
