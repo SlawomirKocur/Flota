@@ -68,9 +68,14 @@ public class OknoGlowne {
     JDateChooser dateChooser, dateChooserZaladunek, dateChooserWyladunek;
    
     String wybranyLadunekWBTN, wybranyPort, wybranyPortWyladunkowy;
+    String wartosZamowieniString;
+    Double wartoscZamowienia;
     Double ilosc;
+    Double iloscDouble;
+    Double obliczonaWartoscZamowienia;
+    Double wartoscZam;
     Date dataZaladunku, dataWyladunku;
-    
+    JLabel lblWartoscZamowienia;
     
     /**
      * @wbp.parser.entryPoint
@@ -672,7 +677,9 @@ public class OknoGlowne {
                                                                 lblZamowienieDataWy.setBounds(325, 235, 141, 19);
                                                                 panelZamownienie.add(lblZamowienieDataWy);                                                         
                                                                 
-                                                                
+                                                                lblWartoscZamowienia = new JLabel("Wartos zamowienia");
+                                                                lblWartoscZamowienia.setBounds(10, 265, 456, 71);
+                                                                panelZamownienie.add(lblWartoscZamowienia);
                                                                 
                                                                 JButton btnPodsumowanie = new JButton("Podsumowanie");
                                                                 btnPodsumowanie.addActionListener(new ActionListener() {
@@ -681,11 +688,12 @@ public class OknoGlowne {
                                                                 		wybranyLadunekWBTN = (String) comboBoxLadunek.getSelectedItem();
                                                                 		wybranyPort = (String) comboBoxPort.getSelectedItem();
                                                                 		wybranyPortWyladunkowy = (String) comboBoxPortWyladunkowy.getSelectedItem();
+                                                                		String iloscString = textIlosc.getText();
+                                                                		iloscDouble = Double.parseDouble(iloscString);
                                                                 		ilosc = Double.parseDouble(textIlosc.getText());
                                                                 		dataZaladunku = dateChooserZaladunek.getDate();
                                                                 		dataWyladunku = dateChooserWyladunek.getDate();
-                                                                		
-                                                                		
+                                                                		                                                            		
                                                                 		
                                                                 		String podsumowanieLadunek = wybranyLadunekWBTN;
                                                                 		String podsumowaniePort = wybranyPort;
@@ -700,6 +708,47 @@ public class OknoGlowne {
                                                                 		lblZamowienieIlosc.setText(podsumowanieIlosc);
                                                                 		lblZamowienieDataZal.setText(podsumowanieDataZa);
                                                                 		lblZamowienieDataWy.setText(podsumowanieDataWy);
+                                                                		
+                                                                		wartoscZam = Double.parseDouble(podsumowanieIlosc);
+                                                                	
+                                                                		Double cenaDouble;
+                                                                		Connection conn = null;
+                                                                		
+                                                                		
+                                                               		 try {
+                                                                            Class.forName("org.sqlite.JDBC");
+                                                                        } catch (ClassNotFoundException e2) {
+                                                                            e2.printStackTrace();
+                                                                        }
+                                                               		
+                                                               			try {
+
+                                                                  
+                                                                       		conn = DriverManager.getConnection("jdbc:sqlite:Flota.db");
+                                                                       		
+                                                                       		Statement stat = conn.createStatement();
+                                                                       		
+                                                                          		String command = ("Select CENA_ZA_TONE_USD FROM LADUNEK WHERE NAZWA_LADUNKU = '" + wybranyLadunekWBTN + "'");
+                                                                          		//stat.executeQuery(command);
+                                                                          		ResultSet rs = stat.executeQuery(command);
+                                                                          		
+                                                                          		
+                                                                          		while(rs.next()) {
+                                                                          			cenaDouble = rs.getDouble(1);
+                                                                          			wartoscZamowienia = cenaDouble * ilosc;
+                                                                          			wartosZamowieniString = String.valueOf(wartoscZamowienia);
+                                                                          			
+                                                                          		}
+                                                                     		
+                                                               			} catch (Exception e3) {
+                                                                       		JOptionPane.showMessageDialog(null, "Problem with connection of database");
+                                                                       		
+                                                               			}
+                                                               			
+                                                               			lblWartoscZamowienia.setText("Wartoœæ zamówienia wynosi: " +wartosZamowieniString+ " USD");
+                                                                		
+                                                                		
+                                                                		
                                                                 		
                                                                 	}
                                                                 });
@@ -743,9 +792,7 @@ public class OknoGlowne {
                                                                     panelPodsumowanie.setBounds(311, 21, 155, 237);
                                                                     panelZamownienie.add(panelPodsumowanie);
                                                                     
-                                                                    JLabel lblWartoscZamowienia = new JLabel("Wartos zamowienia");
-                                                                    lblWartoscZamowienia.setBounds(10, 265, 456, 71);
-                                                                    panelZamownienie.add(lblWartoscZamowienia);
+                                                                  
                                                                     
                                                                     
                                                                     

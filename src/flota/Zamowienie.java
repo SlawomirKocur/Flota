@@ -2,6 +2,8 @@ package flota;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Date;
 
@@ -15,7 +17,7 @@ public class Zamowienie {
 
 	OknoGlowne okno = new OknoGlowne();
 	
-	Double wartoscZamowienia;
+	Double wartoscZamowienia = 0.0;
 	Double cenaLadunku;
 	Double dystans;
 	Date zaladunek;
@@ -24,11 +26,12 @@ public class Zamowienie {
 	String podsumowanie;
 	
 	String wybranyLadunek = okno.wybranyLadunekWBTN;
-	Double ilosc = okno.ilosc;
+	//Double ilosc = okno.wartoscZam;
+	Double cenaDouble = 0.0;
 	
+	Double ilosc = Double.parseDouble(okno.textIlosc.getText());
 	
-	
-	public double liczWartoscZamowienia() {
+	public Double liczWartoscZamowienia() {
 		
 		//pobiera wartosc danego ladunku w tonach z bazy danych
 		
@@ -47,18 +50,56 @@ public class Zamowienie {
         		conn = DriverManager.getConnection("jdbc:sqlite:Flota.db");
         		
         		Statement stat = conn.createStatement();
-           		String pobierzWartoscLadunku = ("Select CENA_ZA_TONE_USD FROM LADUNEK WHERE NAZWA_LADUNKU = " + wybranyLadunek);
-           		stat.executeUpdate(pobierzWartoscLadunku);
-           		cenaLadunku = Double.parseDouble(pobierzWartoscLadunku);
+        		
+           		String command = ("Select CENA_ZA_TONE_USD FROM LADUNEK WHERE NAZWA_LADUNKU = '" + wybranyLadunek + "'");
+           		//stat.executeQuery(command);
+           		ResultSet rs = stat.executeQuery(command);
            		
-           		wartoscZamowienia = cenaLadunku * ilosc;
+           		
+           		while(rs.next()) {
+           			cenaDouble = rs.getDouble(1);
+           			
+           			
+           		}
+           		//PreparedStatement stat = conn.prepareStatement(command);
+           		
+           		//stat.setString(1, wybranyLadunek);
+           		
+           	
+           		
+           		//cenaDouble = rs.getDouble(2);
+           		
+           		//wartoscZamowienia = cenaDouble * ilosc;
+           		
+           		
+           		/*
+           		PreparedStatement stat = conn.prepareStatement(command);
+           		stat.setString(1, wybranyLadunek);
+           		ResultSet rs = stat.executeQuery();
+           		
+           		while(rs.next()) {
+               		Double cenaDouble = rs.getDouble(1);       	
+      
+           		wartoscZamowienia = cenaDouble * ilosc;
+           		okno.obliczonaWartoscZamowienia = wartoscZamowienia;
+           		
+           		*/
+           		
+           		//while (rs.next()) {
+           			//wartoscZamowienia = cenaLadunku * ilosc;	
+           		//}
+           		
+           		//cenaLadunku = Double.parseDouble(pobierzWartoscLadunku);
+           		
+           		//	wartoscZamowienia = cenaLadunku * ilosc;
         		
         		
 			} catch (Exception e) {
         		JOptionPane.showMessageDialog(null, "Problem with connection of database");
         		
 			}
-		return wartoscZamowienia;
+			return wartoscZamowienia = cenaDouble * okno.ilosc;
+		
 		
 		
 	}
