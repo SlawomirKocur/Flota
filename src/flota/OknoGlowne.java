@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -81,7 +82,7 @@ public class OknoGlowne {
 	double lon1;
 	double lat2;
 	double lon2;
-    
+	double dist;
     
     /**
      * @wbp.parser.entryPoint
@@ -830,7 +831,7 @@ public class OknoGlowne {
                                                              		
                                                              			
                                                              				double theta = lon1 - lon2;
-                                                             				double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
+                                                             				dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
                                                              				dist = Math.acos(dist);
                                                              				dist = Math.toDegrees(dist);
                                                              				
@@ -838,21 +839,7 @@ public class OknoGlowne {
                                                              			
                                                                			
                                                                			
-                                                               			
-                                                               			
-                                                               			
-                                                               			
-                                                               			
-                                                               			
-                                                               			
-                                                               			
-                                                               			
-                                                               			
-                                                               			
-                                                               			
-                                                               			
-                                                               			
-                                                               			
+                                             			
                                                                			
                                                                			lblWartoscZamowienia.setText("Wartoœæ zamówienia wynosi: " +wartosZamowieniString+ " USD"+ "\n Dystans do przep³yniêcia: " + dist  );
                                                                 		
@@ -892,7 +879,7 @@ public class OknoGlowne {
                                                                     btnAnalizuj.addActionListener(new ActionListener() {
                                                                     	public void actionPerformed(ActionEvent e) {
                                                                     		
-                                                                    	/*	
+                                                                    		
                                                                     		wybranyLadunekWBTN = (String) comboBoxLadunek.getSelectedItem();
                                                                     		wybranyPort = (String) comboBoxPort.getSelectedItem();
                                                                     		wybranyPortWyladunkowy = (String) comboBoxPortWyladunkowy.getSelectedItem();
@@ -903,30 +890,98 @@ public class OknoGlowne {
                                                                     		dataWyladunku = dateChooserWyladunek.getDate();
                                                                     		
                                                                     		
+                                                                    		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
                                                                     		
-                                                                    		Connection connAnaliza = null;
+                                                                    		String dataDostepnosci = format.format(new Date());
                                                                     		
-                                                                    		try {
+                                                                    		/*
+                                                                    		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
                                                                     		
+                                                                    		dateFormat.format(new Date())
+                                                                    		
+                                                                    		*/
+                                                                    		
+                                                                    		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
-                                                                    			
-                                                                    			connAnaliza = DriverManager.getConnection("jdbc:sqlite:Flota.db");
-                                                                    			
-                                                                    			
-                                                                    			
-                                                                    			String query = "Select* From STATEK";
-                                                                    			
-                                                                    			
-                                                                    			
-                                                                    			
-                                                                    			PreparedStatement pst = connAnaliza.prepareStatement(query);
+  																			String sd = dateFormat.format(dateChooserZaladunek.getDate());
+                                                                    		
+                                                                    		Double cenaDouble = 0.0;
+                                                                    		Double distance = dist;
+                                                                    		Date dostepnosc = null ;
+                                                                    		Connection connAnalys = null;
+                                                                   			
+                                                                  		   try {
+                                                                                 Class.forName("org.sqlite.JDBC");
+                                                                             } catch (ClassNotFoundException e4) {
+                                                                                 e4.printStackTrace();
+                                                                             }
+                                                                    		
+                                                                    		
+                                                                  			try {
+                                                                        		
+
+                                                                    			//conn6 = DriverManager.getConnection("jdbc:sqlite:C:\\JAVA\\Moje bazy danych\\Flota.db");
+                                                                  				connAnalys = DriverManager.getConnection("jdbc:sqlite:Flota.db");
+                                                                  				
+                                                                  				Statement stat = connAnalys.createStatement();
+                                                                  				String command1 = ("Select CENA_ZA_TONE_USD FROM LADUNEK WHERE NAZWA_LADUNKU = '" + wybranyLadunekWBTN + "'");
+                                                                           		ResultSet rs = stat.executeQuery(command1);
+                                                                           		while(rs.next()) {
+                                                                           			cenaDouble = rs.getDouble(1);
+                                                                           			
+                                                                           		}
+                                                                           			
+                                                                           		/*	
+                                                                           		Statement statDostepnosc = 	connAnalys.createStatement();
+                                                                           		String command2 = ("Select SZCOWANA_DATA_DOSTEPNOSCI FROM STATEK;");
+                                                                           		ResultSet rsDost = statDostepnosc.executeQuery(command2);
+                                                                           		while(rsDost.next()) {
+                                                                           			dostepnosc = rs.getDate(1);
+                                                                  				
+                                                                           		}
+                                                                           		*/
+                                                                           			String query = ("select \r\n"
+                                                                           					+ "NAZWA_STATKU, '" +ilosc+ "' *'" +cenaDouble+ "'as ZYSK_BRUTTO,\r\n"
+                                                                           					+ "DOBOWY_KOSZY_PALIWA_USD *'" +distance+ "'as KOSZT,\r\n"
+                                                                           					+ "DOBOWY_KOSZY_PALIWA_USD + LADOWNOSC_STATKU_DWT *'" +cenaDouble+ "'as ZYSK_NETTO,\r\n"
+                                                                           					+ "SZCOWANA_DATA_DOSTEPNOSCI\r\n"
+                                                                           					+ "\r\n"
+                                                                           					+ "from STATEK\r\n"
+                                                                           					+ "  \r\n"
+                                                                           					+ "where LADOWNOSC_STATKU_DWT >= '" +ilosc+ "'  and SZCOWANA_DATA_DOSTEPNOSCI <= '"+sd+ "' \r\n"
+                                                                           					+ "\r\n"
+                                                                           					+ "ORDER BY ZYSK_NETTO DESC;");
+                                                                                			PreparedStatement pst = connAnalys.prepareStatement(query);
+                                                                                			ResultSet rs2 = pst.executeQuery();
+                                                                                			table.setModel(DbUtils.resultSetToTableModel(rs2));
+                                                                                			
+                                                                                			
+                                                                    			/* WORKING SQL STATMENT AS EXAMPLE
+                                                                    			select 
+                                                                  				NAZWA_STATKU, LADOWNOSC_STATKU_DWT *2000 as ZYSK_BRUTTO,
+                                                                  				DOBOWY_KOSZY_PALIWA_USD * 3 as KOSZT,
+                                                                  				DOBOWY_KOSZY_PALIWA_USD + LADOWNOSC_STATKU_DWT * 2000 as ZYSK_NETTO,
+                                                                  				SZCOWANA_DATA_DOSTEPNOSCI
+
+                                                                  				from STATEK
+                                                                  				  
+                                                                  				where LADOWNOSC_STATKU_DWT >=30000 and SZCOWANA_DATA_DOSTEPNOSCI <= '11/07/2021' 
+
+                                                                  				ORDER BY ZYSK_NETTO DESC;
+                                                                  				
+                                                                  				*/
+                                                                  				
+                                                                  				/*
+                                                                    			String query = "select NAZWA_STATKU, LADOWNOSC_STATKU_DWT;
+                                                                    			PreparedStatement pst = connAnalys.prepareStatement(query);
                                                                     			ResultSet rs = pst.executeQuery();
                                                                     			table.setModel(DbUtils.resultSetToTableModel(rs));
                                                                     			
-                                                                    			
+                                                                    			*/
                                                                     			
                                                                     		
-                                                                    		}catch (Exception ex) {
+                                                                    		}
+                                                                           		catch (Exception ex) {
                                                                     			JOptionPane.showMessageDialog(null, "B³¹d po³¹czenia z baz¹");
                                                                     			
                                                                     		}
@@ -936,12 +991,6 @@ public class OknoGlowne {
                                                                     		
                                                                     		
                                                                     		
-                                                                    		
-                                                                    		
-                                                                    		
-                                                                    		
-                                                                    		
-                                                                    		*/
                                                                     		
                                                                     	}
                                                                     });
