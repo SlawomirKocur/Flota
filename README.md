@@ -10,6 +10,7 @@ Finally app will suggest which vessel should take the contract in order to maxim
 
 
 Self- assessment of this project:
+
 The application meets all requirements set at the begining of the project: analyze new contact,
                                                                            suggest solution,
                                                                            can add new vessels, ports, cargo types,
