@@ -9,6 +9,8 @@ App wil analyse those details taking into consideration informations stored in d
 Finally app will suggest which vessel should take the contract in order to maximize profit. 
 
 
+
+
 Self- assessment of this project:
 
 The application meets all requirements set at the begining of the project: analyze new contact,
