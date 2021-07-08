@@ -1016,12 +1016,12 @@ public class OknoGlowne {
         JPanel panelWynikiBazy = new JPanel();
         panelWynikiBazy.setBorder(new TitledBorder(null, "wyniki zapytania bazy danych", TitledBorder.LEADING, TitledBorder.TOP, null, null));
         panelWynikiBazy.setBackground(Color.GRAY);
-        panelWynikiBazy.setBounds(718, 108, 807, 342);
+        panelWynikiBazy.setBounds(718, 45, 807, 405);
         userFrame.getContentPane().add(panelWynikiBazy);
         panelWynikiBazy.setLayout(null);
         
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(10, 24, 787, 307);
+        scrollPane.setBounds(10, 24, 787, 370);
         scrollPane.setBackground(Color.GRAY);
         scrollPane.setForeground(Color.GRAY);
         panelWynikiBazy.add(scrollPane);
@@ -1034,7 +1034,7 @@ public class OknoGlowne {
         JButton btnPokarzStatki = new JButton("Statki");
         btnPokarzStatki.setForeground(Color.BLACK);
         btnPokarzStatki.setBackground(Color.LIGHT_GRAY);
-        btnPokarzStatki.setBounds(726, 82, 89, 23);
+        btnPokarzStatki.setBounds(619, 45, 89, 23);
         userFrame.getContentPane().add(btnPokarzStatki);
         
         JButton btnPokarzPorty = new JButton("Porty");
@@ -1069,7 +1069,7 @@ public class OknoGlowne {
         });
         btnPokarzPorty.setForeground(Color.BLACK);
         btnPokarzPorty.setBackground(Color.LIGHT_GRAY);
-        btnPokarzPorty.setBounds(825, 82, 89, 23);
+        btnPokarzPorty.setBounds(619, 79, 89, 23);
         userFrame.getContentPane().add(btnPokarzPorty);
         
         JButton btnPokarzLadunki = new JButton("Ladunki");
@@ -1101,7 +1101,7 @@ public class OknoGlowne {
         });
         btnPokarzLadunki.setForeground(Color.BLACK);
         btnPokarzLadunki.setBackground(Color.LIGHT_GRAY);
-        btnPokarzLadunki.setBounds(924, 82, 89, 23);
+        btnPokarzLadunki.setBounds(619, 113, 89, 23);
         userFrame.getContentPane().add(btnPokarzLadunki);
         btnPokarzStatki.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
